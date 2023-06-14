@@ -37,6 +37,12 @@ init();
 
 // 초기화
 function init(){
+    // 오디오 추가 
+    let audio = document.getElementById("audio");
+    // 자동재생
+    audio.autoplay = true;
+    // 무한재생
+    audio.loop = true;
     tempMovingItem = {...movingItem};
     // board 그리기 row = 20, col = 10;
 for(let i = 0; i<gameRow; i++){
