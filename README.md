@@ -19,4 +19,6 @@
 - 블록 충돌방지처리
 
 
+![ezgif com-video-to-gif](https://github.com/mjhn010/JS/assets/120008573/8251e725-7510-4cbd-995e-e24825338596)
+
 
