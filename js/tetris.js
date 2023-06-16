@@ -19,17 +19,6 @@ let tempMovingItem;
 let audio = new Audio("bg.mp3")
 let time = Date.now();
 
-console.log(time)
-// 시간구하기 시간지날때마다 스피드 빨라지게해야지 !
-function currentTime(){
-    setInterval(()=>{
-        let currentTime = Date.now();
-        let dif = currentTime - time;
-        let sec = Math.floor(dif/1000);
-        console.log(sec)
-    })
-}
-
 btnAudio.addEventListener("click",()=>{
     audio.play();
     // 자동재생
@@ -64,23 +53,23 @@ reset.addEventListener("click",()=>{
 
 // 초기화
 function init(){
+    // 시간 구하기.
     setInterval(()=>{
         let currentTime = Date.now();
         let dif = currentTime - time;
-        let secTime = dif/1000;
-        let sec = Math.floor(secTime%60);
+        // let secTime = dif/1000;
+        // let sec = Math.floor(secTime%60);
+        let sec = Math.floor(dif/1000);
         // 이거 진짜 똥코드인데 나의 한계가 여기까지인가... 좋은 방법 찾아봐야겠다.
+        console.log(sec)
         if(sec == 15 ){
             dropSpeed = 900;
-            console.log(dropSpeed)
         }
         if(sec == 30){
             dropSpeed = 800;
-            console.log(dropSpeed)
         }
         if(sec == 45){
             dropSpeed = 700;
-            console.log(dropSpeed)
         }
         if(sec == 60){
             dropSpeed = 600;
@@ -94,8 +83,11 @@ function init(){
         if(sec == 180){
             dropSpeed = 300;
         }
-        if(sec == 300){
+        if(sec == 240){
             dropSpeed = 100;
+        }
+        if(sec == 300){
+            dropSpeed = 50;
         }
     })
 
