@@ -1,29 +1,36 @@
 import blocks from "./block.js ";
 
 // window.addEventListener("load",()=>{
-const playground = document.querySelector(".playground > ul")
+const playground = document.querySelector(".playground > ul");
+let gameOverText = document.querySelector(".game-over");
+let scoreDisplay = document.querySelector(".score");
+let reset = document.querySelector(".reset");
+// let audio = document.getElementById("audio");
+let btnAudio = document.querySelector(".audio");
+let audioEnd = document.querySelector(".audio-end")
 
 // setting
 let gameRow = 20;
 let gameCol = 10;
 
+let speed = 0;
 let score = 0;
-let dropSpeed = 500;
+let dropSpeed = 1000;
 let downInterval;
 let tempMovingItem;
+let audio = new Audio("bg.mp3")
 
-// const blocks ={
-//     // 우리가 알고있는 ㅗ 모양(욕아님)
-//     // ㅗ 이모양은 총 위,아래,좌,우 방향키를 누를때마다 모양이 다 다르므로 tree라는 배열에 4공간 배열을 만들어준다.
-
-//     tree:[
-//         [[2,1],[0,1],[1,0],[1,1]],
-//         [[2,1],[1,2],[1,0],[1,1]],
-//         [[1,2],[0,1],[2,1],[1,1]],
-//         [[1,2],[0,1],[1,0],[1,1]],
-//     ]
-
-// }
+btnAudio.addEventListener("click",()=>{
+    audio.play();
+    // 자동재생
+    audio.autoplay = true;
+    // 무한재생
+    audio.loop = true;
+})
+audioEnd.addEventListener("click",()=>{
+    audio.pause();
+    
+})
 
 
 const movingItem = {
@@ -39,6 +46,12 @@ const movingItem = {
 
 init();
 
+reset.addEventListener("click",()=>{
+    playground.innerHTML="";
+    gameOverText.style.display="none";
+    init();
+})
+
 // 초기화
 function init(){
     tempMovingItem = {...movingItem};
@@ -46,19 +59,7 @@ function init(){
 for(let i = 0; i<gameRow; i++){
     prependNewLine();
 }
-rendering()
-}
-
-
-// audio
-
-function musicAudio(){
-// 오디오 추가 
-let audio = document.getElementById("audio");
-// 자동재생
-audio.autoplay = true;
-// 무한재생
-audio.loop = true;
+generateNew()
 }
 
 // 라인 그려주기 
@@ -82,7 +83,6 @@ function rendering(moveType){
     let moving = document.querySelectorAll(".moving")
     for (let move of moving) {
         move.classList.remove(type,"moving")
-        console.log(move)
     }
     blocks[type][direction].some(element => {
         let x = element[0] + left
@@ -96,8 +96,12 @@ function rendering(moveType){
         }else{
             tempMovingItem = {...movingItem}
         // console.log(target)
+        if(moveType == 'retry'){
+            clearInterval(downInterval);
+            gameOver();
+        }
         setTimeout(()=>{
-            rendering();
+            rendering('retry');
             if(moveType === "top"){
                 seize();
             }
@@ -109,6 +113,12 @@ function rendering(moveType){
     movingItem.top = top;
     movingItem.direction = direction;   
 }
+
+function gameOver(){
+    gameOverText.style.display = 'flex'
+    audio.pause();
+}
+
 
 function checkEmpty(target){
     if(!target || target.classList.contains("seized"))
@@ -122,15 +132,44 @@ function seize(){
         move.classList.remove("moving");
         move.classList.add("seized");
     }
-    generateNew();
+    checkMatch();
+}
+
+function checkMatch(){
+    let childNodes = playground.childNodes;
+    childNodes.forEach(child=>{
+        let matched = true;
+        child.children[0].childNodes.forEach(li=>{
+            if(!li.classList.contains("seized")){
+                matched = false;
+            }
+        })
+        if(matched){
+            child.remove()
+            prependNewLine()
+            score++
+            scoreDisplay.innerHTML= score;
+            if(score % 5 == 0){
+                dropSpeed -=100;
+                console.log(dropSpeed)
+            }
+        }
+       
+      
+    })
+    generateNew()
 }
 // 블록이 닿으면 새로운 블록 생성하기.
 function generateNew(){
+
+    clearInterval(downInterval);
+    downInterval = setInterval(()=>{
+        move('top',1)
+    },dropSpeed)
     // 랜덤 블록 생성
     // 오브젝트 entrie을 통해서 오브젝트를 숫자로 변경
     // 왜냐 ? length 길이만큼 랜덤하게 돌리면서 블록을 불러오고싶기떄문.
     let blockArray = Object.entries(blocks);
-    console.log(blockArray)
     let random = Math.floor(Math.random()*blockArray.length)
     movingItem.type= blockArray[random][0]
 
@@ -141,6 +180,13 @@ function generateNew(){
     rendering();
 }
 
+function dropDown(){
+    clearInterval(downInterval);
+    downInterval = setInterval(()=>{
+        move("top",1)
+    },10)
+}
+
 function move(moveType,amount){
     tempMovingItem[moveType] += amount;
     rendering(moveType);
@@ -149,7 +195,6 @@ function move(moveType,amount){
 function chageDirection(){
     // 블록 돌리기 
    tempMovingItem.direction === 3 ? tempMovingItem.direction = 0 : tempMovingItem.direction += 1;
-   console.log(tempMovingItem.direction)
    rendering();
 }
 
@@ -166,6 +211,7 @@ document.addEventListener("keydown",(e) =>{
         // 아래
         case 40: move("top", 1);
             break;
+        case 32: dropDown()
         default: break;
     }
 })
