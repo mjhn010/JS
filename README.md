@@ -21,10 +21,16 @@
 
 ![ezgif com-video-to-gif](https://github.com/mjhn010/JS/assets/120008573/8251e725-7510-4cbd-995e-e24825338596)
 
-###2일차 주요기능
+### 2일차 주요기능
 - 바닥 및 블록에 닿으면 새로운 블록생성
 - 블록 랜덤 생성하기
 
 아직 수정해야할것이 많다. 차근차근 복습도 하고 코드도 다시 훑어보고 해야할거같다. 꾸준하게 하자 화이팅 !
 
 ![ezgif com-video-to-gif](https://github.com/mjhn010/JS/assets/120008573/461794f0-323c-45f1-91d1-c2045cc6000a)
+
+
+### 테트리스완료(주요기능) !
+- 시간경과 후 블록 내려오는 속도 증가.
+- 테트리스 게임 완료 !
+![ezgif com-video-to-gif (1)](https://github.com/mjhn010/JS/assets/120008573/2fceb0a2-1e89-4a67-95c5-f5f9180ac349)
